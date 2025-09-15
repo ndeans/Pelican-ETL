@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evernote-obsidian-etl"
+version = "0.1.0"
+description = "ETL pipeline for exporting Evernote notes to Obsidian Markdown vaults"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name="Your Name", email="you@example.com" }
+]
+license = { text = "MIT" }
+
+dependencies = []
+
+[project.scripts]
+evernote-etl = "main.etl:main"
+
+[tool.setuptools]
+package-dir = {"" = "src/main"}
+
+[tool.setuptools.packages.find]
+where = ["src/main"]
