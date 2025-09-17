@@ -1,26 +1,39 @@
-# src/etl.py
 import argparse
-from src.extract import extract_note
+from pathlib import Path
+
+from src.extract import extract_notes
+from src.transform import transform_notes
 from src.load import load_note
-from src.transform import transform_note
+
+
+def run_etl(enex_path: str, output_dir: str, test: bool = False) -> None:
+    """
+    Run the ETL pipeline for Evernote .enex files.
+    """
+    # Extract
+    notes = extract_notes(enex_path)
+
+    # Transform
+    transformed_notes = transform_notes(notes)
+
+    # Load
+    for note in transformed_notes:
+        load_note(note, output_dir, test)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evernote → Obsidian ETL")
-    parser.add_argument("enex_file", help="Path to the ENEX file")
-    parser.add_argument("--vault", default="vault", help="Obsidian vault path")
-    parser.add_argument("--test", action="store_true", help="Use test vault")
+    parser = argparse.ArgumentParser(description="ETL pipeline for Evernote ENEX export")
+    parser.add_argument("enex_path", help="Path to Evernote .enex file")
+    parser.add_argument("--output-dir", default="output", help="Directory to save Markdown files")
+    parser.add_argument("--test", action="store_true", help="Print transformed notes instead of saving")
+
     args = parser.parse_args()
 
-    vault_path = "test_vault" if args.test else args.vault  
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-#   notes = extract_note(args.enex_file)
-    notes = extract_note("sample.enex")
-    
-    for note in notes:
-        note_md = transform_note(note)
-        file_path = load_note(note_md, vault_path)
-        print(f"Note written to {file_path}")
+    run_etl(args.enex_path, str(output_dir), args.test)
+
 
 if __name__ == "__main__":
     main()

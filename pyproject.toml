@@ -23,3 +23,17 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "test",
+]
+python_files = "test_*.py *_test.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-ra -q"
+log_cli = true
+log_cli_level = "INFO"
+filterwarnings = [
+    "error::DeprecationWarning",
+]

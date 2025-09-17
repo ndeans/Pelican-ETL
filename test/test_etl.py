@@ -1,5 +1,5 @@
 import pytest, os
-from src.extract import extract_note
+from src.extract import extract_notes
 from src.transform import transform_note
 
 
@@ -8,7 +8,7 @@ def test_extract_sample():
     sample_file = "sample.enex"
     assert os.path.exists(sample_file), f"Missing {sample_file} for test."
 
-    notes = extract_note("sample.enex") 
+    notes = extract_notes("sample.enex") 
     assert isinstance(notes, list)
     # We know sample.enex contains 1 note
     assert len(notes) >= 1
