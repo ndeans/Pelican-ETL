@@ -16,7 +16,9 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
-    "pytest"
+    "pytest",
+    "beautifulsoup4",
+    "lxml"
 ]
 
 [tool.setuptools.packages.find]
