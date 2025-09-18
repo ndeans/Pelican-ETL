@@ -1,6 +1,6 @@
 import pytest, os
-from src.extract import extract_notes
-from src.transform import transform_note
+from pelican.extract import extract_notes
+from pelican.transform import transform_note
 
 
 def test_extract_sample():

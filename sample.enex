@@ -4,4 +4,12 @@
     <title>Hello World</title>
     <content>This is a modified sample Evernote export note.</content>
   </note>
+  <note>
+    <title>Test Dummy</title>
+    <content>This is a test dummy, dummy.</content>
+  </note>
+  <note>
+    <title>Say Hi Dummy</title>
+    <content>Hi to the World!</content>
+  </note>
 </en-export>

@@ -16,3 +16,7 @@ Version 7 from initial conversation.
      └── test_etl.py
 
 
+From project base...
+$ pytest -v
+$ python -m cli.etl sample.enex --test
+$ cli/clean.sh

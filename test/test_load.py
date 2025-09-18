@@ -1,18 +1,16 @@
 import io
 import sys
 import tempfile
-from pathlib import Path
-
 import pytest
 
-from src.load import load_note
-
+from pathlib import Path
+from pelican.load import load_note
 
 def test_load_note_test_mode(capsys):
     """Verify load_note prints correctly in test mode."""
     note = {"title": "Test Note", "body": "This is the body."}
 
-    load_note(note, output_dir="unused", test=True)
+    load_note(note, output_dir="STDOUT")
 
     captured = capsys.readouterr()
     assert "# Test Note" in captured.out
@@ -23,8 +21,8 @@ def test_load_note_test_mode(capsys):
 def test_load_note_file_output(tmp_path: Path):
     """Verify load_note writes a file when not in test mode."""
     note = {"title": "Test Dummy", "body": "This is a test dummy, dummy."}
-    # breakpoint()
-    load_note(note, output_dir=str(tmp_path), test=False)
+
+    load_note(note, output_dir=str(tmp_path))
 
     # Expect sanitized filename
     expected_file = tmp_path / "Test_Dummy.md"
