@@ -3,6 +3,7 @@
 import re
 from pathlib import Path
 from typing import Dict
+from pelican.models import Note  # your dataclass module
 
 
 def _sanitize_filename(name: str) -> str:
@@ -13,12 +14,15 @@ def _sanitize_filename(name: str) -> str:
     return re.sub(r'[^a-zA-Z0-9_\-]+', "_", name)
 
 
-def load_note(note: Dict[str, str], output_dir: str) -> None:
+def load_note(note: Note, output_dir: str) -> None:
     """
     Load a single transformed note to disk as Markdown, or print if test mode is on.
-    """
+
     title = note.get("title", "untitled")
-    body = note.get("body", "")
+    body = note.get("body", "(empty)")
+    """
+    title = note.title or "untitled"
+    body = note.content or "(empty)"
 
     filename = _sanitize_filename(title) + ".md"
     filepath = Path(output_dir) / filename

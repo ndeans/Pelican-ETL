@@ -17,7 +17,6 @@ def test_load_note_test_mode(capsys):
     assert "This is the body." in captured.out
     assert "-" * 40 in captured.out
 
-
 def test_load_note_file_output(tmp_path: Path):
     """Verify load_note writes a file when not in test mode."""
     note = {"title": "Test Dummy", "body": "This is a test dummy, dummy."}
