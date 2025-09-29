@@ -1,16 +1,22 @@
-import re
-from typing import List, Dict
-from pelican.models import Note  # your dataclass module
+from typing import List
+from .models import Note
 
 def transform_note(note: Note) -> Note:
+    """
+    Apply transformations to a single Note.
+    Currently, this is a placeholder for ENML -> Markdown or other conversions.
+    """
+    # For now, just pass content through
+    return Note(
+        title=note.title,
+        content=note.content,
+        created=note.created,
+        updated=note.updated
+    )
 
-    transformed_content = _enml_to_markdown(note.content)
-    return Note(title=note.title, content=transformed_content)
 
 def transform_notes(notes: List[Note]) -> List[Note]:
-    """Transform a list of note dictionaries into Markdown."""
+    """
+    Transform a list of notes.
+    """
     return [transform_note(note) for note in notes]
-
-def _enml_to_markdown(enml: str) -> str:
-    """Convert ENML content to Markdown format."""
-    return enml

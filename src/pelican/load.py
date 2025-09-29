@@ -1,35 +1,42 @@
-# src/load.py
-
 import re
 from pathlib import Path
-from typing import Dict
-from pelican.models import Note  # your dataclass module
-
+from .models import Note
 
 def _sanitize_filename(name: str) -> str:
     """
-    Sanitize note title to be a safe filename.
-    Replaces invalid characters with underscores.
+    Sanitize a filename: keep alphanumerics, underscores, and dashes.
     """
-    return re.sub(r'[^a-zA-Z0-9_\-]+', "_", name)
+    return re.sub(r'[^a-zA-Z0-9_\-]+', "_", name).strip("_")
 
 
 def load_note(note: Note, output_dir: str) -> None:
     """
-    Load a single transformed note to disk as Markdown, or print if test mode is on.
-
-    title = note.get("title", "untitled")
-    body = note.get("body", "(empty)")
+    Load a single Note to disk as Markdown.
     """
     title = note.title or "untitled"
     body = note.content or "(empty)"
 
-    filename = _sanitize_filename(title) + ".md"
-    filepath = Path(output_dir) / filename
-    # breakpoint()
+    # Sanitize filename
+    safe_title = _sanitize_filename(title)
+    file_path = Path(output_dir) / f"{safe_title}.md"
 
-    if output_dir == "STDOUT":  # Test mode: print to console
-        print(f"{'-'*40}\n# {title}\n\n{body}\n{'-'*40}")
-    else:  # Normal mode: write to file
-        filepath.write_text(f"# {title}\n\n{body}", encoding="utf-8")
-        print(f"Saved note: {filepath}")
+    with file_path.open("w", encoding="utf-8") as f:
+        f.write(f"# {title}\n\n{body}")
+
+    print(f"Saved note: {file_path}")
+
+def load_note(note: Note, output_dir: str) -> None:
+    """
+    Load a single Note to disk as Markdown.
+    """
+    title = note.title or "untitled"
+    body = note.content or "(empty)"
+
+    # Sanitize filename
+    safe_title = _sanitize_filename(title)
+    file_path = Path(output_dir) / f"{safe_title}.md"
+
+    with file_path.open("w", encoding="utf-8") as f:
+        f.write(f"# {title}\n\n{body}")
+
+    print(f"Saved note: {file_path}")
