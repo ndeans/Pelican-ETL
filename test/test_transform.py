@@ -1,75 +1,26 @@
-# import pytest
-from pelican.transform import transform_note
-from pelican.models import Note
+from src.pelican.transform import transform_note, transform_notes
+from src.pelican.models import Note
 
-def test_transform_plain_note():
-
-    note = Note(
-        title="Plain Note",
-        content="This is a plain text note without XML tags.",
-        created="",
-        updated=""
-    )
+def test_transform_note():
+    note = Note(title="Test Note", content="Some content", created="2025", updated="2025")
     result = transform_note(note)
     assert isinstance(result, Note)
-    assert result.title == "Plain Note"
-    assert result.content == "This is a plain text note without XML tags."
+    assert result.title == "Test Note"
+    assert result.content == "Some content"
+
+def test_transform_notes():
+    notes = [
+        Note(title="Note 1", content="Content 1", created="2025", updated="2025"),
+        Note(title="Note 2", content="Content 2", created="2025", updated="2025"),
+    ]
+    results = transform_notes(notes)
+    assert isinstance(results, list)
+    assert len(results) == 2
+    for original, transformed in zip(notes, results):
+        assert transformed.title == original.title
+        assert transformed.content == original.content
 
 
-def test_transform_enml_with_bold():
-
-    enml = """<?xml version="1.0" encoding="UTF-8"?> <en-note><b>bold text</b></en-note>"""
-    note = Note(
-        title="Bold Note",
-        content=enml
-        )
-    result = transform_note(note)
-    assert isinstance(result, Note)
-    assert result.title == "Bold Note"
-    # assert result.content == "**bold text**"       # ENML to MD is not implement yet - function returns the paramter.
-
-
-def test_transform_enml_with_italic_and_link():
-    enml = """<en-note><i>italic text</i> and <a href="http://example.com">link</a></en-note>"""
-    note = Note(
-        title="Italic & Link",
-        content=enml
-    )
-    result = transform_note(note)
-    assert isinstance(result, Note)
-    assert result.title == "Italic & Link"
-    
-    # assert "*italic text*" in result.content
-    # assert "[link](http://example.com)" in result.content
-
-
-def test_transform_enml_with_list():
-    enml = """<en-note>
-        <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-        </ul>
-    </en-note>"""
-    note = Note(
-        title="List Note",
-        content=enml
-    )
-    result = transform_note(note)
-    # assert "- Item 1" in result.content
-    # assert "- Item 2" in result.content
-
-
-def test_transform_enml_with_code_block():
-    enml = """<en-note>
-        <pre>print("hello")</pre>
-    </en-note>"""
-    note = Note(
-        title="Code Note",
-        content=enml
-    )
-    result = transform_note(note)
-    # assert "```" in result.content
-    # assert 'print("hello")' in result.content
 
 
 

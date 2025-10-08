@@ -1,3 +1,5 @@
+# src/pelican/transform.py
+
 from typing import List
 from .models import Note
 
@@ -7,6 +9,8 @@ def transform_note(note: Note) -> Note:
     Currently, this is a placeholder for ENML -> Markdown or other conversions.
     """
     # For now, just pass content through
+
+
     return Note(
         title=note.title,
         content=note.content,

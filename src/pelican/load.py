@@ -1,3 +1,5 @@
+# src/pelican/load.py
+
 import re
 from pathlib import Path
 from .models import Note

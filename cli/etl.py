@@ -1,6 +1,29 @@
 # cli/etl.py
-import argparse
+
+import sys
 from pathlib import Path
+
+# Ensure 'src' directory is on sys.path no matter where we're launched from
+project_root = Path(__file__).resolve().parents[1]
+src_path = project_root / "src"
+for p in (project_root, src_path):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
+
+
+# if str(src_path) not in sys.path:
+#     sys.path.insert(0, str(src_path))
+
+# --- Diagnostic output ---
+print("\n[Pelican-ETL Debug Info]")
+print(f"Running from: {Path.cwd()}")
+print("Python executable:", sys.executable)
+print("sys.path:")
+for p in sys.path:
+    print("   ", p)
+print()
+
+import argparse
 from src.pelican.extract import extract_from_enex, extract_from_enml
 from src.pelican.transform import transform_notes
 from src.pelican.load import load_note
