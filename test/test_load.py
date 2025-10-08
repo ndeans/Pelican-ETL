@@ -1,34 +1,39 @@
-import io
-import sys
-import tempfile
-import pytest
-
 from pathlib import Path
-from pelican.load import load_note
+from src.pelican.load import load_note, _sanitize_filename
+from src.pelican.models import Note
 
-def test_load_note_test_mode(capsys):
-    """Verify load_note prints correctly in test mode."""
-    note = {"title": "Test Note", "body": "This is the body."}
+def test_load_note_file_output(tmp_path):
+    note = Note(title="My/Invalid:Title*", content="File content here.", created="2025", updated="2025")
+    load_note(note, str(tmp_path))
 
-    load_note(note, output_dir="STDOUT")
-
-    captured = capsys.readouterr()
-    assert "# Test Note" in captured.out
-    assert "This is the body." in captured.out
-    assert "-" * 40 in captured.out
-
-def test_load_note_file_output(tmp_path: Path):
-    """Verify load_note writes a file when not in test mode."""
-    note = {"title": "Test Dummy", "body": "This is a test dummy, dummy."}
-
-    load_note(note, output_dir=str(tmp_path))
-
-    # Expect sanitized filename
-    expected_file = tmp_path / "Test_Dummy.md"
+    expected_file = tmp_path / "My_Invalid_Title.md"
     assert expected_file.exists()
-
     content = expected_file.read_text(encoding="utf-8")
-    # assert "# My/Invalid:Title*" not in content  # title in file is unsanitized
-    # assert "# My_Invalid_Title_" not in content  # sanitized not used in heading
-    # assert "# My/Invalid:Title*" not in content  # heading is the original title
-    assert "This is a test dummy, dummy." in content
+    # The file should contain the original title in the Markdown header
+    assert f"# {note.title}" in content
+    assert "File content here." in content
+
+def test_load_multiple_notes(tmp_path: Path):
+    """
+    Verify that multiple notes are written to disk correctly.
+    """
+    notes = [
+        Note(title="First Note", content="Content 1", created="2025", updated="2025"),
+        Note(title="Second Note", content="Content 2", created="2025", updated="2025"),
+    ]
+
+    # Save each note
+    for note in notes:
+        load_note(note, str(tmp_path))
+
+    # Verify that each file exists using the same sanitization as load_note
+    for note in notes:
+        safe_title = _sanitize_filename(note.title)
+        file_path = tmp_path / f"{safe_title}.md"
+        assert file_path.exists(), f"Expected file {file_path} not found"
+
+        # Optionally, check the content
+        content = file_path.read_text(encoding="utf-8")
+        assert note.content in content
+
+
