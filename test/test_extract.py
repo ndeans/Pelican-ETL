@@ -4,7 +4,7 @@ from src.pelican.extract import extract_from_enex, extract_from_enml
 from src.pelican.models import Note
 
 def test_extract_from_enex():
-    sample_file = "sample.enex"
+    sample_file = "data/sample.enex"
     assert os.path.exists(sample_file), f"Missing {sample_file} for test."
 
     notes = extract_from_enex(sample_file)
